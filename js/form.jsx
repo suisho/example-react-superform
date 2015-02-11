@@ -17,9 +17,13 @@ var UserStore = Marty.createStore({
     })
   }
 })
+// Action - Constant - Store - State - View - Action ---
+//
+
 var FormConstants = Marty.createConstants({
   Form : ["NEXT", "PREV"]
 })
+
 var FormStore = Marty.createStore({
   handlers : {
     next : FormConstants.Form.NEXT,
@@ -30,19 +34,29 @@ var FormStore = Marty.createStore({
       step : 1
     }
   },
+  incrementStep(i){
+    var max = 3
+    var min = 1
+    var step = this.state.step + i
+    step = Math.max(step, min)
+    step = Math.min(step, max)
+    this.state.step = step
+    this.hasChanged()
+  },
   next(){
-    this.state.step++
-    this.hasChanged() // 必要そう
+    this.incrementStep(1)
   },
   prev(){
-    this.state.step--
-    this.hasChanged()
+    this.incrementStep(-1)
   }
 })
 var FormState = Marty.createStateMixin(FormStore)
 
 var FormAction = Marty.createActionCreators({
   next : FormConstants.Form.NEXT(function(){
+    this.dispatch()
+  }),
+  prev : FormConstants.Form.PREV(function(){
     this.dispatch()
   })
 })
@@ -55,6 +69,8 @@ var FormComtainer = React.createClass({
         return (<Step1/>)
       case 2:
         return (<Step2/>)
+      case 3:
+        return (<Step3/>)
     }
   },
   /*nextHandler(e){
@@ -80,17 +96,32 @@ var Name = React.createClass({
     )
   }
 })
-var Step1 = React.createClass({
-  doNext(e){
+
+var NextButton = React.createClass({
+  doAction(e){
     e.preventDefault()
     FormAction.next()
   },
+  render(){
+    return <button onClick={this.doAction}>Next</button>
+  }
+})
+var PrevButton = React.createClass({
+  doAction(e){
+    e.preventDefault()
+    FormAction.prev()
+  },
+  render(){
+    return <button onClick={this.doAction}>Prev</button>
+  }
+})
+var Step1 = React.createClass({
   render(){
     return (
       <form>
         <h1>Step1</h1>
         <Name/>
-        <button onClick={this.doNext}>Next</button>
+        <NextButton/>
       </form>
     )
   }
@@ -100,6 +131,18 @@ var Step2 = React.createClass({
     return (
       <div>
         <h1>Step2</h1>
+        <PrevButton/>
+        <NextButton/>
+      </div>
+    )
+  }
+})
+var Step3 = React.createClass({
+  render : function(){
+    return (
+      <div>
+        <h1>Step3</h1>
+        <PrevButton/>
       </div>
     )
   }
