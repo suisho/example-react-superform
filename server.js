@@ -9,11 +9,9 @@ var b = beefy({
   bundlerFlags :['-t', '[ reactify --es6 ]']
 })
 
-var server = new Hapi.Server();
-server.connection({
-  port: 3000,
-  host : 'localhost'
-});
+var server = Hapi.createServer('localhost', 3000, {
+  //cors : true
+})
 
 server.start(function () {
   console.log('Server running at:', server.info.uri);
@@ -21,6 +19,8 @@ server.start(function () {
 
 // mock
 var user = {
+  firstName : "yamada",
+  lastName : "tarou"
 }
 
 
@@ -42,7 +42,10 @@ server.route({
   method: 'GET',
   path: '/user',
   handler : function(request, reply){
-    reply(user);
+    reply(user)
+  },
+  config:{
+    jsonp: "callback"
   }
 })
 server.route({

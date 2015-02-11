@@ -2,7 +2,7 @@ var React = require("react")
 var Marty = require("marty")
 var Dispatcher = require("marty/dispatcher")
 
-
+var mockServer = require("./mockServer")
 
 var UserStore = Marty.createStore({
   getInitialState(){
@@ -10,15 +10,45 @@ var UserStore = Marty.createStore({
       firstName : null,
       lastName : null
     }
+  },
+  postUser(user){
+    mockServer.postUser(user, function(err, body){
+
+    })
   }
 })
-
-var FormComtainer = React.createClass({
+var FormConstants = Marty.createConstants({
+  Form : ["NEXT", "PREV"]
+})
+var FormStore = Marty.createStore({
+  handlers : {
+    next : FormConstants.Form.NEXT,
+    prev : FormConstants.Form.PREV,
+  },
   getInitialState(){
     return {
       step : 1
     }
   },
+  next(){
+    this.state.step++
+    this.hasChanged() // 必要そう
+  },
+  prev(){
+    this.state.step--
+    this.hasChanged()
+  }
+})
+var FormState = Marty.createStateMixin(FormStore)
+
+var FormAction = Marty.createActionCreators({
+  next : FormConstants.Form.NEXT(function(){
+    this.dispatch()
+  })
+})
+
+var FormComtainer = React.createClass({
+  mixins : [FormState],
   getStepForm(){
     switch(this.state.step){
       case 1:
@@ -27,11 +57,11 @@ var FormComtainer = React.createClass({
         return (<Step2/>)
     }
   },
-  nextHandler(e){
+  /*nextHandler(e){
     e.preventDefault()
     this.setState({step : this.state.step + 1})
     // rerender ? this.render()
-  },
+  },*/
   render(){
     var form = this.getStepForm()
     form.props.doNext = this.nextHandler
@@ -51,12 +81,16 @@ var Name = React.createClass({
   }
 })
 var Step1 = React.createClass({
+  doNext(e){
+    e.preventDefault()
+    FormAction.next()
+  },
   render(){
     return (
       <form>
         <h1>Step1</h1>
         <Name/>
-        <button onClick={this.props.doNext}>Next</button>
+        <button onClick={this.doNext}>Next</button>
       </form>
     )
   }
