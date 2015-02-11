@@ -11,7 +11,6 @@ var UserStore = Marty.createStore({
   }
 })
 
-
 var FormComtainer = React.createClass({
   getInitialState(){
     return {

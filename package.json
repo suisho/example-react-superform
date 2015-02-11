@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "hapi": "^8.2.0",
     "marty": "^0.8.10",
     "react": "^0.12.2",
     "reactify": "^1.0.0"
