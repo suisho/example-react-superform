@@ -1,0 +1,19 @@
+{
+  "name": "example-react-superform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "marty": "^0.8.10",
+    "react": "^0.12.2",
+    "reactify": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "beefy form.jsx:build.js -- -t [ reactify --es6 ]",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "suisho",
+  "license": "ISC"
+}

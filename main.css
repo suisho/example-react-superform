@@ -1,0 +1,14 @@
+#form{
+  margin : 2em auto;
+  width : 30em;
+}
+
+input{
+  padding : 0.5em;
+  margin : 1em;
+}
+button{
+  padding : 0.5em;
+  margin : 1em;
+  border-radius : 0.5em;
+}
