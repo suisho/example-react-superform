@@ -2,6 +2,8 @@ var React = require("react")
 var Marty = require("marty")
 var Dispatcher = require("marty/dispatcher")
 
+
+
 var UserStore = Marty.createStore({
   getInitialState(){
     return {
@@ -28,7 +30,6 @@ var FormComtainer = React.createClass({
   nextHandler(e){
     e.preventDefault()
     this.setState({step : this.state.step + 1})
-    
     // rerender ? this.render()
   },
   render(){
@@ -37,6 +38,7 @@ var FormComtainer = React.createClass({
     return form
   }
 })
+
 
 var Name = React.createClass({
   render(){

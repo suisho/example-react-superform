@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "beefy": "^2.1.3",
+    "browserify": "^8.1.3",
     "hapi": "^8.2.0",
     "marty": "^0.8.10",
     "react": "^0.12.2",
@@ -11,7 +13,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "beefy form.jsx:build.js -- -t [ reactify --es6 ]",
+    "start": "beefy js/form.jsx:build.js -- -t [ reactify --es6 ]",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
