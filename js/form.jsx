@@ -3,8 +3,8 @@ var Marty = require("marty")
 var Dispatcher = require("marty/dispatcher")
 
 // Action - Constant - Store - State - View - Action ---
-//
-var FormStore = require("./form_store")
+
+var FormStore = require("./FormStore")
 var FormConstants = require("./constant").form
 var mockServer = require("./mockServer")
 
@@ -18,7 +18,6 @@ var UserStore = Marty.createStore({
   },
   postUser(user){
     mockServer.postUser(user, function(err, body){
-
     })
   }
 })
@@ -77,7 +76,7 @@ var NextButton = React.createClass({
 })
 var PrevButton = React.createClass({
   mixins : [FormActionButton],
-  action : FormAction.prev(),
+  action : FormAction.prev,
   render(){
     return <button onClick={this.doAction}>Prev</button>
   }
