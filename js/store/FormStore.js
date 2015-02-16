@@ -1,6 +1,6 @@
 var Marty = require("marty")
-var FormConstants = require("./constant").form
-var FormStore = Marty.createStore({
+var FormConstants = require("../constant").form
+module.exports = Marty.createStore({
   minStep : 1,
   maxStep : 3,
   handlers : {
@@ -26,4 +26,3 @@ var FormStore = Marty.createStore({
     this.incrementStep(-1)
   }
 })
-module.exports = FormStore
