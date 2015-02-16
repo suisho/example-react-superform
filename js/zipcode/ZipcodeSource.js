@@ -14,10 +14,12 @@ module.exports = Marty.createStateSource({
     }).then(function(res){
       console.log(res)
     })*/
-    ZipcodeSourceActionCreators.fetchData({
-      pref : "東京都",
-      addr1 : "品川区上大崎",
-      addr2 : "スターバックス"
-    })
+    setTimeout(function(){
+      ZipcodeSourceActionCreators.fetchData({
+        pref : "東京都",
+        addr1 : "品川区上大崎",
+        addr2 : "スターバックス"
+      })
+    }, 500)
   }
 })

@@ -6,21 +6,19 @@ var UserStore = require("../store/UserStore")
 var UserState = Marty.createStateMixin(UserStore)
 
 var AddressForm = require("./AddressForm.jsx")
+var AddressFormB = require("./AddressForm.jsx").b
 
 var buttons = require("./FormButtons.jsx")
 var NextButton = buttons.next
 var PrevButton = buttons.prev
 
 var Step1 = React.createClass({
-  mixins : [UserState],
+  mixins : [React.addons.LinkedStateMixin, UserState],
   validate(){
     console.log("step1 validate")
   },
-  changeAddress(e){
-    console.log(e)
-    e.target.value
-  },
   render(){
+    console.log("z")
     return (
       <form>
         <h1>Step1</h1>
@@ -32,12 +30,12 @@ var Step1 = React.createClass({
         <NextButton validate={this.validate}/>
       </form>
     )
-    /**
-    pref={this.state.pref}
-    addr1={this.state.addr1}
-    addr2={this.state.addr2}
-    change={this.changeAddress}
-    */
+    // <AddressFormB
+    //   pref={this.linkState("pref")}
+    //   addr1={this.linkState("addr1")}
+    //   addr2={this.linkState("addr2")}
+    // />
+    
   }
 })
 var Step2 = React.createClass({

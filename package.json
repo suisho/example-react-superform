@@ -17,7 +17,7 @@
     "wzrd": "^1.2.1"
   },
   "scripts": {
-    "start": "wzrd js/index.jsx:build.js -- -t babelify",
+    "start": "beefy js/index.jsx:build.js -- -t babelify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
