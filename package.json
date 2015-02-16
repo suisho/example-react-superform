@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "babelify": "^5.0.3",
     "beefy": "^2.1.3",
     "browserify": "^8.1.3",
     "hapi": "^8.2.0",
@@ -16,7 +17,7 @@
     "wzrd": "^1.2.1"
   },
   "scripts": {
-    "start": "wzrd js/form.jsx:build.js -- -t [ reactify --es6 ]",
+    "start": "wzrd js/index.jsx:build.js -- -t babelify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

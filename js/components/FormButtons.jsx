@@ -1,5 +1,5 @@
 var React = require("react")
-var FormActionCreator = require("../action/FormActionCreator")
+var FormActionCreator = require("../form/FormActionCreator")
 
 var FormActionButton = {
   propTypes : {

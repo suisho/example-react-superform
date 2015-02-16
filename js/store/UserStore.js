@@ -1,8 +1,7 @@
 var Marty = require("marty")
 var UserConstants = require("../constant").user
-
 module.exports = Marty.createStore({
-  handler : {
+  handlers : {
     getAddress : UserConstants.ADDR_FROM_ZIPCODE
   },
   getInitialState(){
@@ -15,10 +14,10 @@ module.exports = Marty.createStore({
       addr2 : null
     }
   },
-  getAddress(address){
-    this.state.pref = address.pref
-    this.state.addr1 = address.addr1
-    this.state.addr2 = address.addr2
+  getAddress(pref, addr1, addr2){
+    this.state.pref = pref
+    this.state.addr1 = addr1
+    this.state.addr2 = addr2
     this.hasChanged()
   },
   postUser(user){

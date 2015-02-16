@@ -4,18 +4,15 @@ var Dispatcher = require("marty/dispatcher")
 
 // Action - Constant - Store - State - View - Action ---
 
-var FormStore = require("./store/FormStore")
-var FormConstants = require("./constant").form
-var UserConstants = require("./constant").user
+var FormStore = require("./form/FormStore")
 var mockServer = require("./mockServer")
 var StepComponents = require("./components/Steps.jsx")
-
-
-var FormState = Marty.createStateMixin(FormStore)
 
 var Step1 = StepComponents.Step1
 var Step2 = StepComponents.Step2
 var Step3 = StepComponents.Step3
+
+var FormState = Marty.createStateMixin(FormStore)
 
 var FormComtainer = React.createClass({
   mixins : [FormState],

@@ -1,7 +1,8 @@
 var Marty = require("marty")
+var ZipcodeSourceActionCreators = require("./ZipcodeSourceActionCreators")
 module.exports = Marty.createStateSource({
-  type : 'http',
-  getAddress : function(zipcode){
+  type: 'http',
+  getAddress: function (zipcode) {
     var key = zipcode.substr(0,3)
     /*this.request({
       url : 'https://jpostal.googlecode.com/svn/trunk/json/' + key + ".json",
@@ -13,6 +14,10 @@ module.exports = Marty.createStateSource({
     }).then(function(res){
       console.log(res)
     })*/
-    
+    ZipcodeSourceActionCreators.fetchData({
+      pref : "東京都",
+      addr1 : "品川区上大崎",
+      addr2 : "スターバックス"
+    })
   }
 })
