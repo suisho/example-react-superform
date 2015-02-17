@@ -1,5 +1,5 @@
 var Marty = require("marty")
-var ZipcodeSourceActionCreators = require("./ZipcodeSourceActionCreators")
+var ZipcodeSourceActionCreators = require("../action/ZipcodeSourceActionCreators")
 module.exports = Marty.createStateSource({
   type: 'http',
   getAddress: function (zipcode) {

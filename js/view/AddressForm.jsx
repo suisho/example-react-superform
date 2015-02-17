@@ -1,9 +1,9 @@
 var React = require("react")
 var Marty = require("marty")
 var UserStore = require("../store/UserStore")
+var ZipcodeSource = require("../source/ZipcodeSource")
 
 var UserState = Marty.createStateMixin(UserStore)
-var ZipcodeSource = require("../zipcode/ZipcodeSource")
 
 module.exports = React.createClass({
   mixins : [React.addons.LinkedStateMixin, UserState],

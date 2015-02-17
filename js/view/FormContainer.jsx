@@ -1,8 +1,8 @@
 var React = require("react")
 var Marty = require("marty")
 var StepComponents = require("./Steps.jsx")
-var FormActionCreator = require("../form/FormActionCreator")
-var FormStore = require("../form/FormStore")
+var FormActionCreator = require("../action/FormActionCreator")
+var FormStore = require("../store/FormStore")
 var FormState = Marty.createStateMixin(FormStore)
 
 

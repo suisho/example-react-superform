@@ -1,5 +1,5 @@
 var React = require("react")
-var FormActionCreator = require("../form/FormActionCreator")
+var FormActionCreator = require("../action/FormActionCreator")
 var FormActionButtonBase = {
   propTypes : {
     validate : React.PropTypes.func.isRequired,
