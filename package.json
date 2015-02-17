@@ -10,14 +10,18 @@
     "hapi": "^8.2.0",
     "marty": "^0.8.10",
     "react": "^0.12.2",
-    "reactify": "^1.0.0"
+    "reactify": "^1.0.0",
+    "watchify": "^2.3.0"
   },
   "devDependencies": {
     "minimist": "^1.1.0",
     "wzrd": "^1.2.1"
   },
   "scripts": {
-    "start": "beefy js/index.jsx:build.js -- -t babelify",
+    "server": "harp server",
+    "beef": "beefy js/index.jsx:build.js -- -t babelify",
+    "watch": "watchify -d js/index.jsx -t babelify -o build.js",
+    "start": "npm run server && npm run watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

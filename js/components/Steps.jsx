@@ -14,7 +14,7 @@ var NextButton = buttons.next
 var PrevButton = buttons.prev
 
 var Step1 = React.createClass({
-  mixins : [React.addons.LinkedStateMixin, UserState],
+  mixins : [UserState],
   validate(){
     console.log("step1 validate")
   },
@@ -26,17 +26,19 @@ var Step1 = React.createClass({
       <form>
         <h1>Step1</h1>
         <div>
-          <input name="first-name"  placeholder="Foo" value=""/>
-          <input name="last-name"   placeholder="Bob" value=""/>
+          <input name="first-name" placeholder="Foo" value=""/>
+          <input name="last-name" placeholder="Bob" value=""/>
         </div>
-        <AddressFormC ref="address"
-          pref={this.state.pref}
-          addr1={this.state.addr1}
-          addr2={this.state.addr2}
-        />
+        <AddressForm />
         <NextButton validate={this.validate}/>
       </form>
     )
+    // <AddressFormC ref="address"
+    //   pref={this.state.pref}
+    //   addr1={this.state.addr1}
+    //   addr2={this.state.addr2}
+    // />
+    //
     // <AddressFormB
     //   pref={this.linkState("pref")}
     //   addr1={this.linkState("addr1")}
