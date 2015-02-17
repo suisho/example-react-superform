@@ -1,7 +1,8 @@
 var React = require("react")
 var FormActionCreator = require("../form/FormActionCreator")
 
-var FormActionButton = {
+
+var FormActionButtonBase = {
   propTypes : {
     validate : React.PropTypes.func.isRequired,
   },
@@ -13,14 +14,14 @@ var FormActionButton = {
 }
 
 var NextButton = React.createClass({
-  mixins : [FormActionButton],
+  mixins : [FormActionButtonBase],
   action : FormActionCreator.next,
   render(){
     return <button onClick={this.doAction}>Next</button>
   }
 })
 var PrevButton = React.createClass({
-  mixins : [FormActionButton],
+  mixins : [FormActionButtonBase],
   action : FormActionCreator.prev,
   render(){
     return <button onClick={this.doAction}>Prev</button>

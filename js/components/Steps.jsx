@@ -7,6 +7,7 @@ var UserState = Marty.createStateMixin(UserStore)
 
 var AddressForm = require("./AddressForm.jsx")
 var AddressFormB = require("./AddressForm.jsx").b
+var AddressFormC = require("./AddressForm.jsx").c
 
 var buttons = require("./FormButtons.jsx")
 var NextButton = buttons.next
@@ -18,7 +19,9 @@ var Step1 = React.createClass({
     console.log("step1 validate")
   },
   render(){
-    console.log("z")
+    if(this.refs.address){
+      console.log(this.refs.address.getRefsData())
+    }
     return (
       <form>
         <h1>Step1</h1>
@@ -26,7 +29,11 @@ var Step1 = React.createClass({
           <input name="first-name"  placeholder="Foo" value=""/>
           <input name="last-name"   placeholder="Bob" value=""/>
         </div>
-        <AddressForm/>
+        <AddressFormC ref="address"
+          pref={this.state.pref}
+          addr1={this.state.addr1}
+          addr2={this.state.addr2}
+        />
         <NextButton validate={this.validate}/>
       </form>
     )

@@ -28,13 +28,6 @@ module.exports = React.createClass({
   }
 })
 
-var React = require("react")
-var Marty = require("marty")
-var UserStore = require("../store/UserStore")
-
-var UserState = Marty.createStateMixin(UserStore)
-var ZipcodeSource = require("../zipcode/ZipcodeSource")
-
 module.exports.b = React.createClass({
   autocompleteAddress(e){
     e.preventDefault()
@@ -52,6 +45,36 @@ module.exports.b = React.createClass({
           <input refs="pref_p" valueLink={this.props.pref}/>
           <input refs="addr1_p" valueLink={this.props.addr1} />
           <input refs="addr2_p" valueLink={this.props.addr2} />
+        </div>
+      </div>
+    )
+  }
+})
+
+module.exports.c = React.createClass({
+  autocompleteAddress(e){
+    e.preventDefault()
+    ZipcodeSource.getAddress("1000000")
+  },
+  getRefsData(){
+    return {
+      pref : this.refs.pref.getDOMNode().value,
+      addr1 : this.refs.addr1.getDOMNode().value,
+      addr2 : this.refs.addr2.getDOMNode().value,
+    }
+  },
+  render(){
+    console.log(this.props)
+    return (
+      <div>
+        <div>
+          <input name="zipcode"/>
+          <button onClick={this.autocompleteAddress}>Auto Input</button>
+        </div>
+        <div>
+          <input ref="pref" defaultValue={this.props.pref}/>
+          <input ref="addr1" defaultValue={this.props.addr1} />
+          <input ref="addr2" defaultValue={this.props.addr2} />
         </div>
       </div>
     )
