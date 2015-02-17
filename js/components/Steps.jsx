@@ -1,7 +1,7 @@
 var React = require("react/addons")
 var Marty = require("marty")
 
-var UserStore = require("../store/UserStore")
+var UserStore = require("../user/UserStore")
 
 var UserState = Marty.createStateMixin(UserStore)
 
