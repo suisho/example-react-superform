@@ -20,7 +20,7 @@
   "scripts": {
     "server": "harp server",
     "beef": "beefy js/index.jsx:build.js -- -t babelify",
-    "watch": "watchify -d js/index.jsx -t babelify -o build.js",
+    "watch": "watchify -d js/index.jsx -t babelify -o build.js -v",
     "start": "npm run server && npm run watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
