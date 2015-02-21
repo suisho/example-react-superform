@@ -6,8 +6,6 @@ var UserStore = require("../store/UserStore")
 var UserState = Marty.createStateMixin(UserStore)
 
 var AddressForm = require("./AddressForm.jsx")
-var AddressFormB = require("./AddressForm.jsx").b
-var AddressFormC = require("./AddressForm.jsx").c
 
 var buttons = require("./FormButtons.jsx")
 var NextButton = buttons.next
@@ -44,7 +42,6 @@ var Step1 = React.createClass({
     //   addr1={this.linkState("addr1")}
     //   addr2={this.linkState("addr2")}
     // />
-    
   }
 })
 var Step2 = React.createClass({
@@ -61,7 +58,7 @@ var Step2 = React.createClass({
   }
 })
 var Step3 = React.createClass({
-  render : function(){
+  render(){
     return (
       <div>
         <h1>Step3</h1>

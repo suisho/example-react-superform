@@ -21,7 +21,7 @@ module.exports = Marty.createStore({
     this.hasChanged()
   },
   postUser(user){
-    mockServer.postUser(user, function(err, body){
-    })
+    /*mockServer.postUser(user, function(err, body){
+    })*/
   }
 })

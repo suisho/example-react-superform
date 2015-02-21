@@ -10,6 +10,7 @@
     "hapi": "^8.2.0",
     "marty": "^0.8.10",
     "react": "^0.12.2",
+    "react-select": "^0.3.2",
     "reactify": "^1.0.0",
     "watchify": "^2.3.0"
   },
@@ -18,6 +19,7 @@
     "wzrd": "^1.2.1"
   },
   "scripts": {
+    "lint" : "eslint js/**/*.jsx",
     "server": "harp server",
     "beef": "beefy js/index.jsx:build.js -- -t babelify",
     "watch": "watchify -d js/index.jsx -t babelify -o build.js -v",

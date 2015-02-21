@@ -60,7 +60,7 @@ module.exports.c = React.createClass({
     return {
       pref : this.refs.pref.getDOMNode().value,
       addr1 : this.refs.addr1.getDOMNode().value,
-      addr2 : this.refs.addr2.getDOMNode().value,
+      addr2 : this.refs.addr2.getDOMNode().value
     }
   },
   render(){

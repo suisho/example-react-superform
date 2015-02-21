@@ -1,0 +1,20 @@
+{
+  "env": {
+    "node" : true,
+    "browser" : true
+  },
+  "ecmaFeatures" : {
+    "jsx": true,
+    "objectLiteralShorthandMethods" : true
+  },
+  "rules": {
+    "semi" : [2 , "never"],
+    "strict" : false,
+    "key-spacing" : [2, {
+      "beforeColon" : true,
+      "afterColon" : true,
+    }],
+    "no-unused-vars": [1, {"vars" : "all", "args" : "after-used"} ],
+    "no-comma-dangle" : false
+  }
+}
