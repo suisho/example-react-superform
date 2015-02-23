@@ -1,15 +1,26 @@
+var _ = require("lodash")
 var React = require("react")
 var Marty = require("marty")
 var UserStore = require("../store/UserStore")
 var ZipcodeSource = require("../source/ZipcodeSource")
-
+var Typeahead = require("react-typeahead").Typeahead
 var UserState = Marty.createStateMixin(UserStore)
+
+
+var prefs = [
+  "北海道", "青森"
+]
 
 module.exports = React.createClass({
   mixins : [React.addons.LinkedStateMixin, UserState],
   autocompleteAddress(e){
     e.preventDefault()
     ZipcodeSource.getAddress("1000000")
+  },
+  onChangePref(e){
+    if(_.indexOf(prefs, e.target.value)){
+      console.log("same")
+    }
   },
   render(){
     return (
@@ -20,6 +31,7 @@ module.exports = React.createClass({
         </div>
         <div>
           <input refs="pref" valueLink={this.linkState("pref")} />
+          <Typeahead options={prefs} onChange={this.onChangePref} />
           <input refs="addr1" valueLink={this.linkState("addr1")} />
           <input refs="addr2" valueLink={this.linkState("addr2")} />
         </div>
