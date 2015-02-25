@@ -1,4 +1,5 @@
 var extend = require("extend")
+
 function traverseCheck(data, checkProperty, childrenProperty){
   var children = data[childrenProperty]
   if(children){ // 子があるなら子の状態を上書き

@@ -31,17 +31,6 @@ var Step1 = React.createClass({
         <NextButton validate={this.validate}/>
       </form>
     )
-    // <AddressFormC ref="address"
-    //   pref={this.state.pref}
-    //   addr1={this.state.addr1}
-    //   addr2={this.state.addr2}
-    // />
-    //
-    // <AddressFormB
-    //   pref={this.linkState("pref")}
-    //   addr1={this.linkState("addr1")}
-    //   addr2={this.linkState("addr2")}
-    // />
   }
 })
 var Step2 = React.createClass({
