@@ -1,9 +1,87 @@
 var assert = require("power-assert")
 var util = require("util")
-var treeFix = require("../js/lib/tree")
+
+var treeCheck = require("../js/lib/tree_check")
 var travarse = require("traverse")
-describe("tree", function(){
-  var result = treeFix({
+
+// expectデータ生成用
+function dump(data){
+  console.log(util.inspect(data, {depth : null}))
+}
+
+var childrenFixtures = {
+  allTrue : [
+    {"checked" : true},
+    {"checked" : true},
+    {"checked" : true}
+  ],
+  allFalse : [
+    {"checked" : false},
+    {"checked" : false},
+    {"checked" : false}
+  ],
+  mixed :[
+    {"checked" : true},
+    {"checked" : false},
+    {"checked" : true},
+    {"checked" : false},
+    {"checked" : true}
+  ]
+}
+describe("unit test", function(){
+  describe("every", function(){
+    var func = treeCheck.every
+    it("all true", function(){
+      var result = func({
+        "checked" : false,
+        "children" : childrenFixtures.allTrue
+      })
+      assert.equal(result.checked,true)
+    })
+    it("mixed", function(){
+      var result = func({
+        "checked" : true,
+        "children" : childrenFixtures.mixed
+      })
+      assert.equal(result.checked, false)
+    })
+    it("all false", function(){
+      var result = func({
+        "checked" : true,
+        "children" : childrenFixtures.allFalse
+      })
+      assert.equal(result.checked, false)
+    })
+  })
+  describe("some", function(){
+    var func = treeCheck.some
+    it("all true ", function(){
+      var result = func({
+        "checked" : false,
+        "children" : childrenFixtures.allTrue
+      })
+      assert.equal(result.checked,true)
+    })
+    it("mixed", function(){
+      var result = func({
+        "checked" : false,
+        "children" : childrenFixtures.mixed
+      })
+      assert.equal(result.checked, true)
+    })
+    it("all false", function(){
+      var result = func({
+        "checked" : true,
+        "children" : childrenFixtures.allFalse
+      })
+      assert.equal(result.checked, false)
+    })
+  })
+})
+
+
+describe("large", function(){
+  var fixture = {
     "name" : "p",
     "checked" : true,
     "children" : [
@@ -11,7 +89,7 @@ describe("tree", function(){
         "name": "A",
         "children" : [
             { "checked" : true, "name" : "A-1" },
-            { "checked" : true,  "name" : "A-2"},
+            { "checked" : true, "name" : "A-2"},
             { "checked" : true, "name" : "A-3" },
         ]
       },
@@ -20,36 +98,69 @@ describe("tree", function(){
         "name": "C",
         "children" : [
             { "checked" : true, "name" : "C-1" },
-            { "checked" : false,  "name" : "C-2"},
+            { "checked" : false, "name" : "C-2"},
             { "checked" : true, "name" : "C-3" },
         ]
       },
+      { "checked" : true ,
+        "name": "D",
+        "children" : [
+            { "checked" : false, "name" : "D-1" },
+            { "checked" : false,  "name" : "D-2"},
+        ]
+      },
     ]
+  }
+  it("every( AND Expresion)", function(){
+    var resultEvery = treeCheck.every(fixture)
+    var expectEvery = {
+      name: 'p',
+      checked: false,
+      children:
+       [ { checked: true,
+           name: 'A',
+           children:
+            [ { checked: true, name: 'A-1' },
+              { checked: true, name: 'A-2' },
+              { checked: true, name: 'A-3' } ] },
+         { checked: false, name: 'B' },
+         { checked: false,
+           name: 'C',
+           children:
+            [ { checked: true, name: 'C-1' },
+              { checked: false, name: 'C-2' },
+              { checked: true, name: 'C-3' } ] },
+         { checked: false,
+           name: 'D',
+           children:
+            [ { checked: false, name: 'D-1' },
+              { checked: false, name: 'D-2' } ] } ] }
+    assert.deepEqual(expectEvery, resultEvery)
   })
-  // console.log(util.inspect(result, {depth:null}))
-  var expect = { name: 'p',
-    checked: false,
-    children:
-     [ { checked: true,
-         name: 'A',
-         children:
-          [ { checked: true, name: 'A-1' },
-            { checked: true, name: 'A-2' },
-            { checked: true, name: 'A-3' } ] },
-       { checked: false, name: 'B' },
-       { checked: false,
-         name: 'C',
-         children:
-          [ { checked: true, name: 'C-1' },
-            { checked: false, name: 'C-2' },
-            { checked: true, name: 'C-3' } ] } ] }
-  var expectTraverse = travarse(result)
-  travarse(expect).forEach(function(x){
-    var exp = expectTraverse.get(this.path)
-    if(typeof x === "object" && x["name"]){ // objet or array
-      it(x["name"], function(){
-        assert.deepEqual(exp, x)
-      })
-    }
+  it("some ( OR Expression)", function(){
+    var resultSome = treeCheck.some(fixture)
+    var expectSome = {
+      name: 'p',
+      checked: true,
+      children:
+       [ { checked: true,
+           name: 'A',
+           children:
+            [ { checked: true, name: 'A-1' },
+              { checked: true, name: 'A-2' },
+              { checked: true, name: 'A-3' } ] },
+         { checked: false, name: 'B' },
+         { checked: true,
+           name: 'C',
+           children:
+            [ { checked: true, name: 'C-1' },
+              { checked: false, name: 'C-2' },
+              { checked: true, name: 'C-3' } ] },
+         { checked: false,
+           name: 'D',
+           children:
+            [ { checked: false, name: 'D-1' },
+              { checked: false, name: 'D-2' } ] } ] }
+    assert.deepEqual(expectSome, resultSome)
   })
 })
