@@ -6,8 +6,9 @@ var UserStore = require("../store/UserStore")
 var UserState = Marty.createStateMixin(UserStore)
 
 var AddressForm = require("./AddressForm.jsx")
-
+var Toggle = require("../component/Toggle.jsx")
 var buttons = require("./FormButtons.jsx")
+var TreeCheckbox = require("./TreeCheckbox.jsx")
 var NextButton = buttons.next
 var PrevButton = buttons.prev
 
@@ -27,6 +28,9 @@ var Step1 = React.createClass({
           <input name="first-name" placeholder="Foo" value=""/>
           <input name="last-name" placeholder="Bob" value=""/>
         </div>
+        <Toggle>
+          <TreeCheckbox />
+        </Toggle>
         <AddressForm />
         <NextButton validate={this.validate}/>
       </form>

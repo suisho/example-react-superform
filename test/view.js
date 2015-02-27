@@ -1,4 +1,4 @@
-
+return
 describe("ZipcodeRepository", function(){
   it("getAddress", function(done){
     var ZipcodeRepository = require("../js/source/ZipcodeSource")

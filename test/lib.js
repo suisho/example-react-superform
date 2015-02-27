@@ -77,6 +77,19 @@ describe("unit test", function(){
       assert.equal(result.checked, false)
     })
   })
+  describe("set value", function(){
+    it("set true", function(){
+      var tree = {
+        "checked" : false,
+        "children" : childrenFixtures.allFalse
+      }
+      var result = treeCheck.set(tree, true, )
+      assert.equal(result.checked, false)
+    })
+    it("set false", function(){
+      
+    })
+  })
 })
 
 

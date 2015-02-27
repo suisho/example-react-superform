@@ -1,7 +1,9 @@
+var objectPath = require("object-path")
 var extend = require("extend")
+
 function traverseCheck(data, checkFunc, checkProperty, childrenProperty){
   var children = data[childrenProperty]
-  if(children){ // 子があるなら子の状態を上書き
+  if(children){ // check children
     var childTraverse = children.map(function(child){
       return traverseCheck(child, checkFunc, checkProperty, childrenProperty)
     })
@@ -21,10 +23,38 @@ var treeCheck = function(tree, checkFunc, opts){
   return clonedTree
 }
 
+var propagateValue = function(tree, value, checkProperty, childrenProperty){
+  var children = tree[childrenProperty]
+  console.log(children)
+  if(children){
+    children.forEach(function(child){
+      propagateValue(child, value, checkProperty, childrenProperty)
+    })
+  }
+  tree[checkProperty] = value
+}
+
+var generatePath = function(path, childrenProperty){
+  var result = [path[0]]
+  for(var i = 1; i < path.length; i++){
+    result.push(childrenProperty)
+    result.push(path[i])
+  }
+  return result
+}
+
 module.exports.every = function(tree, opts){
-  return treeCheck(tree, "every", opts)
+  var result = treeCheck(tree, "every", opts)
+  return result
 }
 
 module.exports.some = function(tree, opts){
   return treeCheck(tree, "some", opts)
+}
+
+
+module.exports.set = function(tree, path, value){
+  var item = objectPath.get(tree, generatePath(path, "children") )
+  propagateValue(item, value, "checked", "children")
+  return tree
 }
