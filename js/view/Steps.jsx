@@ -5,7 +5,7 @@ var UserStore = require("../store/UserStore")
 
 var UserState = Marty.createStateMixin(UserStore)
 
-var AddressForm = require("./AddressForm.jsx")
+var AddressForm = require("./AddressForm.jsx").d
 var Toggle = require("../component/Toggle.jsx")
 var buttons = require("./FormButtons.jsx")
 var TreeCheckbox = require("./TreeCheckbox.jsx")
@@ -16,6 +16,9 @@ var Step1 = React.createClass({
   mixins : [UserState],
   validate(){
     console.log("step1 validate")
+  },
+  updateHandler(update){
+    this.setState(update)
   },
   render(){
     if(this.refs.address){
@@ -31,7 +34,12 @@ var Step1 = React.createClass({
         <Toggle>
           <TreeCheckbox />
         </Toggle>
-        <AddressForm />
+        <AddressForm
+          pref={this.state.pref}
+          addr1={this.state.addr1}
+          addr2={this.state.addr2}
+          updateHandler={this.updateHandler}
+        />
         <NextButton validate={this.validate}/>
       </form>
     )

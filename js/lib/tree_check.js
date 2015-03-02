@@ -25,7 +25,6 @@ var treeCheck = function(tree, checkFunc, opts){
 
 var propagateValue = function(tree, value, checkProperty, childrenProperty){
   var children = tree[childrenProperty]
-  console.log(children)
   if(children){
     children.forEach(function(child){
       propagateValue(child, value, checkProperty, childrenProperty)

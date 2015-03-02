@@ -15,13 +15,14 @@ module.exports = Marty.createStateSource({
     }).then(function(res){
       console.log(res)
     })*/
-    return this.get("/", function(){
+    //return this.get("/", function(){
+      console.log("zzzzz")
       var result = {
         pref : "東京都",
         addr1 : "品川区上大崎",
         addr2 : "スターバックス"
       }
       ZipcodeSourceActionCreators.fetchData(result)
-    })
+    //})
   }
 })
