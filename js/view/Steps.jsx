@@ -20,16 +20,35 @@ var Step1 = React.createClass({
   updateHandler(update){
     this.setState(update)
   },
+  onChange(e){
+    var change = {}
+    change[e.target.name] = e.target.value
+    this.updateHandler(change)
+  },
+  renderInput(name, placeHolder){
+    var value = this.state[name]
+    return (
+      <input
+        key={name}
+        name={name}
+        value={value}
+        placeholder={placeHolder}
+        onChange={this.onChange}
+      />
+    )
+  },
   render(){
     if(this.refs.address){
       console.log(this.refs.address.getRefsData())
     }
+    var forms = []
+    forms.push(this.renderInput("firstName", "foo"))
+    forms.push(this.renderInput("lastName", "bar"))
     return (
       <form>
         <h1>Step1</h1>
         <div>
-          <input name="first-name" placeholder="Foo" value=""/>
-          <input name="last-name" placeholder="Bob" value=""/>
+          {forms}
         </div>
         <Toggle>
           <TreeCheckbox />
