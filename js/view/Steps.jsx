@@ -6,6 +6,7 @@ var UserStore = require("../store/UserStore")
 var UserState = Marty.createStateMixin(UserStore)
 
 var AddressForm = require("./AddressForm.jsx").d
+var KanaForm = require("./KanaForm.jsx")
 var Toggle = require("../component/Toggle.jsx")
 var buttons = require("./FormButtons.jsx")
 var TreeCheckbox = require("./TreeCheckbox.jsx")
@@ -46,7 +47,10 @@ var Step1 = React.createClass({
     forms.push(this.renderInput("lastName", "bar"))
     return (
       <form>
-        <h1>Step1</h1>
+        <h1>Step1(す)</h1>
+        <KanaForm
+          updateHandler={this.updateHandler}
+        />
         <div>
           {forms}
         </div>
