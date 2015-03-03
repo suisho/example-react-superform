@@ -1,6 +1,6 @@
 var React = require("react")
-var convertKana = require("../lib/kana")
-
+var extend = require("extend")
+var buildKanaState = require("./build_kana_state") // TODO
 var KanaInput = React.createClass({
   propType : {
     initialValue : React.PropTypes.string,
@@ -9,6 +9,8 @@ var KanaInput = React.createClass({
   getCleanValue(){
     return {
       buffer : "",
+      ignore : "",
+      active : "",
       kana : "",
       value : ""
     }
@@ -22,7 +24,7 @@ var KanaInput = React.createClass({
     this.updateState()
   },
   updateState(){
-    if(!this.state.value){ // clean if empty
+    if(this.isBlank()){ // clean if empty
       this.clean()
       return
     }
@@ -37,41 +39,41 @@ var KanaInput = React.createClass({
     })
   },
   getNextState(state){
-    return this.buildNextState(state)
+    var old = extend(state, {})
+    console.log(old)
+    var next = this.buildNextState(state)
+    console.log("=>", next)
+    return next
+  },
+  isBlank(){
+    return !this.state.value
+  },
+  isConvert(){
+    if(!this.isBlank() && this.state.value.length === this.state.kana.length){
+      return true
+    }
   },
   buildNextState(state){
-    var buffer = state.buffer || ""
-    var nextState = {
-      buffer : buffer,
-      value : state.value,
-    }
-    var kana = state.kana
-    var converted = buffer + convertKana(state.value)
-    if(converted.match(kana)){
-      nextState.kana = converted
-      return nextState
-    }
-    nextState.buffer = kana
-    nextState.kana = kana
-    return nextState
+    return buildKanaState(state)
   },
   onUpdate(){
-    console.log(this.state)
+    //console.log(this.state)
     this.props.onUpdate(this.state)
   },
   onChange(e){
-    this.setState({ value : e.target.value })
+    this.setState({ value : e.target.value }, () => {
+      this.updateState()
+    })
     this.onUpdate()
   },
   render(){
     return <input
       value={this.state.value}
       onChange={this.onChange}
-      onKeyDown={this.onKeyEvent}
     />
   }
 })
-module.exports = React.createClass({
+var Example = React.createClass({
   getInitialState(){
     return {
       kana : ""
@@ -87,14 +89,13 @@ module.exports = React.createClass({
     return (
       <div>
         <div>
-          <KanaInput
-            onUpdate={this.onUpdateKana}
-          />
-        </div>
-        <div>
+          <KanaInput onUpdate={this.onUpdateKana} />
           <input name="kana" value={this.state.kana} onChange={this.onChange} />
         </div>
       </div>
     )
   }
 })
+
+module.exports = Example
+module.exports.KanaInput = KanaInput

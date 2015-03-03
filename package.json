@@ -35,7 +35,7 @@
     "beef": "beefy js/index.jsx:build.js -- -t babelify",
     "watch": "watchify -d js/index.jsx -t babelify -o build.js -v",
     "start": "npm run server && npm run watch",
-    "test": "mocha --compilers js:babel/register",
+    "test": "mocha --compilers js:babel/register --require intelli-espower-loader",
     "env": "env"
   },
   "keywords": [],
