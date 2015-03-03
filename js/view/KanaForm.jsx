@@ -4,40 +4,31 @@ module.exports = React.createClass({
   getInitialState(){
     return {
       buffers : "",
-      firstNameKana : ""
+      kana : ""
     }
   },
-  onKey(e){
+  onKeyEvent(e){
     this.syncKana()
   },
   syncKana(){
     var kana = this.getKana()
     if(kana === ""){
-      this.clear()
+      this.replaceState(this.getInitialState())
     }
     this.setState({
-      firstNameKana : kana
+      kana : kana
     })
-  },
-  clear(){
-    this.replaceState(this.getInitialState())
-  },
-  getBuffer(){
-    return this.state.buffer || ""
   },
   getKana(){
     var name = this.state.firstName
-    var oldKana = this.state.firstNameKana
+    var oldKana = this.state.kana
     if(!name || name.length === 0){
       return ""
     }
 
     var cnv = convertKana(name)
-    var converted = this.getBuffer() + cnv
-    console.log([
-      this.getBuffer(), name, oldKana, cnv, converted
-    ])
-
+    var buffer = this.state.buffer || ""
+    var converted = buffer + cnv
     if(converted.match(oldKana)){
       return converted
     }
@@ -48,6 +39,7 @@ module.exports = React.createClass({
     var update = {}
     update[e.target.name] = e.target.value
     this.setState(update)
+    //this.props.onChange(this.state)
   },
   render(){
     return (
@@ -57,11 +49,11 @@ module.exports = React.createClass({
             name="firstName"
             value={this.state.firstName}
             onChange={this.onChange}
-            onKeyUp={this.onKey}
+            onKeyDown={this.onKeyEvent}
           />
         </div>
         <div>
-          <input name="firstNameKana" value={this.state.firstNameKana} onChange={this.onChange} />
+          <input name="firstNameKana" value={this.state.kana} onChange={this.onChange} />
         </div>
       </div>
     )
