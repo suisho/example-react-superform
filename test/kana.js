@@ -5,4 +5,15 @@ describe("kana", function(){
     var result = kana("あああ山本")
     assert.equal("あああ", result)
   })
+  
+  describe("to katakana", function(){
+    it("正常系", function(){
+      var result = kana.toKatakana("あぅん")
+      assert.equal("アゥン", result)
+    })
+    it("ひらがな以外をど含む場合", function(){
+      var result = kana.toKatakana("あぅん鬼acdb")
+      assert.equal("アゥン鬼acdb", result)
+    })
+  })
 })

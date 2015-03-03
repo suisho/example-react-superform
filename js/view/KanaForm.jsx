@@ -3,18 +3,46 @@ var convertKana = require("../lib/kana")
 module.exports = React.createClass({
   getInitialState(){
     return {
-      buffer : "",
+      buffers : "",
       firstNameKana : ""
     }
   },
-  onKeyDown(e){
-    var name = this.state.firstName
-    var kana = this.state.firstNameKana.length + convertKana(name)
-    // console.log(String.fromCharCode(e.keyCode))
-    // console.log(e.keyCode, name, convertKana(name), this.state.firstNameKana)
+  onKey(e){
+    this.syncKana()
+  },
+  syncKana(){
+    var kana = this.getKana()
+    if(kana === ""){
+      this.clear()
+    }
     this.setState({
       firstNameKana : kana
     })
+  },
+  clear(){
+    this.replaceState(this.getInitialState())
+  },
+  getBuffer(){
+    return this.state.buffer || ""
+  },
+  getKana(){
+    var name = this.state.firstName
+    var oldKana = this.state.firstNameKana
+    if(!name || name.length === 0){
+      return ""
+    }
+
+    var cnv = convertKana(name)
+    var converted = this.getBuffer() + cnv
+    console.log([
+      this.getBuffer(), name, oldKana, cnv, converted
+    ])
+
+    if(converted.match(oldKana)){
+      return converted
+    }
+    this.setState({ buffer : oldKana })
+    return oldKana
   },
   onChange(e){
     var update = {}
@@ -29,7 +57,8 @@ module.exports = React.createClass({
             name="firstName"
             value={this.state.firstName}
             onChange={this.onChange}
-            onKeyDown={this.onKeyDown} />
+            onKeyUp={this.onKey}
+          />
         </div>
         <div>
           <input name="firstNameKana" value={this.state.firstNameKana} onChange={this.onChange} />
