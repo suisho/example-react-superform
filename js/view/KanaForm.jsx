@@ -1,59 +1,98 @@
 var React = require("react")
 var convertKana = require("../lib/kana")
+
+var KanaInput = React.createClass({
+  propType : {
+    initialValue : React.PropTypes.string,
+    onUpdate : React.PropTypes.func.isRequired
+  },
+  getCleanValue(){
+    return {
+      buffer : "",
+      kana : "",
+      value : ""
+    }
+  },
+  getInitialState(){
+    var clean = this.getCleanValue()
+    clean.value = this.props.initialValue || ""
+    return clean
+  },
+  onKeyEvent(){
+    this.updateState()
+  },
+  updateState(){
+    if(!this.state.value){ // clean if empty
+      this.clean()
+      return
+    }
+    var state = this.getNextState(this.state)
+    this.setState(state, () => {
+      this.onUpdate()
+    })
+  },
+  clean(){
+    this.replaceState(this.getCleanValue(), () => {
+      this.onUpdate()
+    })
+  },
+  getNextState(state){
+    return this.buildNextState(state)
+  },
+  buildNextState(state){
+    var buffer = state.buffer || ""
+    var nextState = {
+      buffer : buffer,
+      value : state.value,
+    }
+    var kana = state.kana
+    var converted = buffer + convertKana(state.value)
+    if(converted.match(kana)){
+      nextState.kana = converted
+      return nextState
+    }
+    nextState.buffer = kana
+    nextState.kana = kana
+    return nextState
+  },
+  onUpdate(){
+    console.log(this.state)
+    this.props.onUpdate(this.state)
+  },
+  onChange(e){
+    this.setState({ value : e.target.value })
+    this.onUpdate()
+  },
+  render(){
+    return <input
+      value={this.state.value}
+      onChange={this.onChange}
+      onKeyDown={this.onKeyEvent}
+    />
+  }
+})
 module.exports = React.createClass({
   getInitialState(){
     return {
-      buffers : "",
       kana : ""
     }
   },
-  onKeyEvent(e){
-    this.syncKana()
-  },
-  syncKana(){
-    var kana = this.getKana()
-    if(kana === ""){
-      this.replaceState(this.getInitialState())
-    }
+  onUpdateKana(data){
     this.setState({
-      kana : kana
+      kana : data.kana
     })
-  },
-  getKana(){
-    var name = this.state.firstName
-    var oldKana = this.state.kana
-    if(!name || name.length === 0){
-      return ""
-    }
-
-    var cnv = convertKana(name)
-    var buffer = this.state.buffer || ""
-    var converted = buffer + cnv
-    if(converted.match(oldKana)){
-      return converted
-    }
-    this.setState({ buffer : oldKana })
-    return oldKana
-  },
-  onChange(e){
-    var update = {}
-    update[e.target.name] = e.target.value
-    this.setState(update)
     //this.props.onChange(this.state)
   },
   render(){
     return (
       <div>
         <div>
-          <input
-            name="firstName"
-            value={this.state.firstName}
-            onChange={this.onChange}
-            onKeyDown={this.onKeyEvent}
+          <KanaInput
+            onUpdate={this.onUpdateKana}
           />
         </div>
         <div>
-          <input name="firstNameKana" value={this.state.kana} onChange={this.onChange} />
+          <input name="kana" value={this.state.kana} onChange={this.onChange} />
         </div>
       </div>
     )
