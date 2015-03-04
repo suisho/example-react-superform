@@ -9,8 +9,6 @@ var KanaInput = React.createClass({
   getCleanValue(){
     return {
       buffer : "",
-      ignore : "",
-      active : "",
       kana : "",
       value : ""
     }
