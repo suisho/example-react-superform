@@ -35,8 +35,6 @@ var build = function(prevValue, value, buffer, kana){
     if(!activeReg.test(prevActive)){ return false}
     return true
   })()
-  //console.log([active, buffer])
-  // TODO: buffer !== "" は多分いらん。
   if(isConfused){ // isolated
     nextState.kana = kana
     nextState.buffer = baseBuffer

@@ -167,4 +167,11 @@ describe("kana", function(){
     {kana: "やまいもやま"},
     "backspace mixed"
   )
+  describe("Confused", function(){
+    testPending(
+      {buffer: "やまだたろう", kana: "やまだたろう", value: "やま", prevValue: "やまだ"},
+      {kana: "やまだたろう"},
+      "Confused by Buffer"
+    )
+  })
 })
