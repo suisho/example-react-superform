@@ -1,4 +1,5 @@
 var kanautil = require("kanautil")
+var japanese = require("japanese")
 var operateDiff = require("../lib/operate_diff")
 var JsDiff = require("diff")
 
@@ -15,47 +16,52 @@ var getSanitizedActive = function(value){
 }
 
 
-var main = function(state){
+var build = function(prevValue, value, buffer, kana){
   var nextState = {}
-  var diff = JsDiff.diffChars(state.prevValue, state.value)
+  var diff = JsDiff.diffChars(prevValue, value)
+  var isConverted = operateDiff.isConvertedDiff(diff)
+  var isRemoved = operateDiff.isRemovedDiff(diff)
+  var active = getActive(value)
+  var prevActive = getActive(prevValue)
 
-  var buffer = state.buffer
-  var kana = state.kana
-
-  var active = getActive(state.value)
-  var prevActive = getActive(state.prevValue)
-
-  // like:やｍ
+  // fix buffer
   if(prevActive === ""){
-    var sanitizedPreActive = getSanitizedActive(state.prevValue)
-    buffer = buffer.replace(sanitizedPreActive, "")
-  }
-  // deleted value
-  /*
-  if(active === ""
-    && prevActive !== ""
-    && kana !== prevActive
-  //  && kana !== buffer + prevActive
-  ){
-    kana = kana.replace(prevActive, "")
-  }
-  */
-  if(operateDiff.isRemovedDiff(diff)){
-    kana = kana.replace(prevActive, "")
-  }
+    var sanitize = getSanitizedActive(prevValue)
+    var sanitizeReg = new RegExp(sanitize + "$")
+    buffer = buffer.replace(sanitizeReg, "")
 
+    var activeReg = new RegExp(active + "$")
+    buffer = buffer.replace(activeReg, "")
+  }
   nextState.buffer = buffer
-  if(active === ""){
+
+
+  if(isRemoved){
+    var removeReg = new RegExp(prevActive + "$")
+    active = active.replace(removeReg, "")
+  }
+  if(active.length < prevActive.length && !isRemoved){ // swap
     nextState.buffer = kana
     nextState.kana = nextState.buffer
     return nextState
   }
-  nextState.kana = buffer + active
+  if(isConverted){
+    nextState.kana = buffer + active
+  }else{
+    nextState.kana = buffer + active
+  }
   return nextState
 }
+
+var main = function(state){
+  var prevValue = japanese.hiraganize(state.prevValue || "")
+  var value = japanese.hiraganize(state.value || "")
+
+  return build(prevValue, value, state.buffer, state.kana)
+}
+
 module.exports = function(state, callback){
   var next = main(state)
   next.prevValue = state.value
-
   callback(null, next)
 }
