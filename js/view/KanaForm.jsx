@@ -10,7 +10,8 @@ var KanaInput = React.createClass({
     return {
       buffer : "",
       kana : "",
-      value : ""
+      value : "",
+      prevValue : "",
     }
   },
   getInitialState(){
@@ -26,7 +27,13 @@ var KanaInput = React.createClass({
       this.clean()
       return
     }
-    var state = this.getNextState(this.state)
+    //var state = this.getNextState(this.state)
+  /*  this.setState(state, () => {
+      this.onUpdate()
+    })*/
+    this.updateNextState(this.state)
+  },
+  setKanaState(state){
     this.setState(state, () => {
       this.onUpdate()
     })
@@ -36,12 +43,16 @@ var KanaInput = React.createClass({
       this.onUpdate()
     })
   },
-  getNextState(state){
+  updateNextState(state){
     var old = extend(state, {})
-    console.log(old)
-    var next = this.buildNextState(state)
-    console.log("=>", next)
-    return next
+    buildKanaState(state, (err, next) => {
+      if(err){
+        return
+      }
+      console.log(old, "=>", next)
+      this.setKanaState(next)
+    })
+    //return next
   },
   isBlank(){
     return !this.state.value
@@ -50,9 +61,6 @@ var KanaInput = React.createClass({
     if(!this.isBlank() && this.state.value.length === this.state.kana.length){
       return true
     }
-  },
-  buildNextState(state){
-    return buildKanaState(state)
   },
   onUpdate(){
     //console.log(this.state)
@@ -82,6 +90,11 @@ var Example = React.createClass({
       kana : data.kana
     })
     //this.props.onChange(this.state)
+  },
+  onChange(e){
+    this.setState({
+      kana : e.target.value
+    })
   },
   render(){
     return (

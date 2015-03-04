@@ -2,11 +2,14 @@ var assert = require("power-assert")
 var buildState = require("../js/view/build_kana_state.js")
 var test = function(input, expect, msg ){
   msg = msg || ""
-  it(expect.value + " -> " + expect.kana + ":"+ msg, function(){
-    var result = buildState(input)
-    var keys = ["value", "kana"]
-    keys.forEach(function(key){
-      assert.equal(result[key], expect[key], "fail:" + key)
+  var msgs = [input.value , "("+input.kana+")", "->" , expect.kana , ":", msg].join(" ")
+  it(msgs, function(done){
+    buildState(input, function(err, result){
+      var keys = [ "kana", "buffer"]
+      keys.forEach(function(key){
+        assert.equal(result[key], expect[key], "fail:" + key)
+      })
+      done()
     })
   })
 }
@@ -58,23 +61,24 @@ describe("kana", function(){
   })
 
   test({
-    value : "山本た",
-    kana : "やまもと",
-    buffer : "やまもと"
+    value : "山田た",
+    kana : "やまだ",
+    buffer : "やまだ"
   }, {
-    value : "山本た",
-    kana : "やまもとた",
-    buffer : "やまもと"
+    value : "山田た",
+    kana : "やまだた",
+    buffer : "やまだ"
   })
   test({
-    value : "山本た",
-    kana : "やまもとたろ",
-    buffer : "やまもと"
+    value : "山田た",
+    prevValue : "山田たろ",
+    kana : "やまだたろ",
+    buffer : "やまだ"
   },{
-    value : "山本た",
-    kana : "やまもとた",
-    buffer : "やまもと"
-  })
+    value : "山田た",
+    kana : "やまだた",
+    buffer : "やまだ"
+  }, "backspace")
   test({
     buffer: "やまだ",
     kana: "やまだ",
@@ -116,7 +120,7 @@ describe("kana", function(){
     buffer : ""
   })
   test(
-    {buffer: "", kana: "や", value: "やｍ"},
+    {buffer: "", kana: "や", value: "やｍ", prevValue : "や"},
     {value : "やｍ", kana : "や", buffer : "や"}
   )
   test(
@@ -128,17 +132,28 @@ describe("kana", function(){
     {buffer : "あやま", kana : "あやまや", value : "あ山や"}
   )
 
-  // it("や -> やま", function(){
-  //   var result = buildState(
-  //     {buffer: "や", kana: "や", value: "やま"}
-  //   )
-  //   assert.deepEqual(result, {
-  //     value : "やま",
-  //     kana : "やま",
-  //     buffer : "やま"
-  //   })
-  // })
-
+  test(
+    {buffer: "", kana: "や", value: "やｍ", prevValue: "や"},
+    {buffer: "や", value: "やｍ", kana: "や"}
+  )
+  test(
+    {buffer: "や", kana: "や", value: "やま", prevValue: "やｍ", prevKana: "や"},
+    {buffer : "", kana : "やま", value : "やま"}
+  )
+  test(
+    {buffer: "やまだ", kana: "やまだ", value: "山田た", prevValue: "山田ｔ", prevKana: "やまだ"},
+    {buffer : "やまだ", kana : "やまだた"}
+  )
+  test(
+    {buffer: "やまだ", kana: "やまだた", value: "山田", prevValue: "山田た"},//active : null, prevActive : た presani: null
+    {buffer: "やまだ", kana: "やまだ"},
+    "Backspace XXX"
+  )
+  test(
+    {buffer: "やまだ", kana: "やまだたろう", value: "山田太郎", prevValue: "山田たろう"},
+    {buffer: "やまだたろう", kana: "やまだたろう"},
+    "Convert XXX"
+  )
   // it(" ", function(){
   //   return
   //   //{buffer: "や", ignore: "やｍ", active: "やま", kana: "ややま", value: "やま"}
