@@ -2,7 +2,7 @@ var assert = require("power-assert")
 var buildState = require("../js/view/build_kana_state.js")
 var testMsg = function(input, expect, msg ){
   msg = msg || ""
-  return [input.prevValue, "=>", input.value , "("+input.kana+")", "->" , expect.kana , ":", msg].join(" ")
+  return [input.prevValue, "("+input.kana+")", "=>", input.value , "(" + expect.kana + ")" , ":", msg].join(" ")
 }
 var test = function(input, expect, msg ){
   it(testMsg(input, expect, msg), function(done){
@@ -20,22 +20,14 @@ var testPending = function(input , expect, msg){
 }
 describe("kana", function(){
   test({
-    value : "ｙ",
-    kana : "",
-    buffer : ""
+    value : "ｙ", kana : "", buffer : ""
   }, {
-    value : "ｙ",
     kana : "",
-    buffer : ""
   })
   test({
-    value : "あ",
-    buffer: "",
-    kana: "",
+    value : "あ", buffer: "", kana: "",
   }, {
-    value : "あ",
     kana : "あ",
-    buffer: "",
   })
   test({
     value : "あい",
@@ -68,6 +60,7 @@ describe("kana", function(){
 
   test({
     value : "山田た",
+    prevValue : "山田",
     kana : "やまだ",
     buffer : "やまだ"
   }, {
@@ -84,7 +77,7 @@ describe("kana", function(){
     value : "山田た",
     kana : "やまだた",
     buffer : "やまだ"
-  }, "backspace")
+  }, "backspace XXX")
   test({
     buffer: "やまだ",
     kana: "やまだ",
@@ -168,5 +161,10 @@ describe("kana", function(){
   test(
     {buffer: "やまもと", kana: "やまもとまりお", value: "山本麻里お", prevValue: "山本まりお"},
     {kana: "やまもとまりお"}
+  )
+  test(
+    {buffer: "やまいもやま", kana: "やまいもやま", value: "山いも", prevValue: "山いも山"},
+    {kana: "やまいもやま"},
+    "backspace mixed"
   )
 })

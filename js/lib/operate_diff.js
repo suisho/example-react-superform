@@ -10,6 +10,9 @@ var hasRemovedDiff = function(diff){
     return d.removed === true
   })
 }
+var isAddedDiff = function(diff){
+  return hasAddedDiff(diff) && !hasRemovedDiff(diff)
+}
 var isRemovedDiff = function(diff){
   return !hasAddedDiff(diff) && hasRemovedDiff(diff)
 }
@@ -25,6 +28,9 @@ var args = function(oldStrOrDiff, newStr){
   return JsDiff.diffChars(oldStrOrDiff, newStr)
 }
 
+module.exports.isAddedDiff = function(oldStr, newStr){
+  return isAddedDiff(args(oldStr, newStr))
+}
 module.exports.isRemovedDiff = function(oldStr, newStr){
   return isRemovedDiff(args(oldStr, newStr))
 }

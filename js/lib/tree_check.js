@@ -1,8 +1,6 @@
 var objectPath = require("object-path")
 var extend = require("extend")
 
-
-
 function traverseCheck(data, checkFunc, checkProperty, childrenProperty){
   var children = data[childrenProperty]
   if(children){ // check children
