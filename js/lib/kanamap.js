@@ -6,21 +6,21 @@ var isHiragana = function(str){
   var m = str.match(japanese.hiraganaRegex)
   return (m && m.length === str.length) ? true : false
 }
-var updateMap = function(map,  key, value){
+var updateMap = function(map, key, kana){
   if(!key){
     return map
   }
-  if(isHiragana(value)){
+  if(isHiragana(kana)){
     return map
   }
   if(!isHiragana(key)){
     key = map[key] || key
   }
-  var currentKana = map[value]
+  var currentKana = map[kana]
   if(currentKana && currentKana.length < key.length){
     key = currentKana
   }
-  map[value] = key
+  map[kana] = key
   return map
 
 }
