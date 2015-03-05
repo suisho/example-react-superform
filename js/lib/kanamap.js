@@ -6,7 +6,7 @@ var isHiragana = function(str){
   var m = str.match(japanese.hiraganaRegex)
   return (m && m.length === str.length) ? true : false
 }
-var updateMap = function(map, value, key){
+var updateMap = function(map,  key, value){
   if(!key){
     return map
   }
@@ -40,7 +40,7 @@ module.exports = function(prev, next, baseMap){
       buffer = d.value
     }
     if(d.added){
-      result = updateMap(result, d.value, buffer)
+      result = updateMap(result, buffer, d.value)
       buffer = null
     }
   })
