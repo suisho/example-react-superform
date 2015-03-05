@@ -2,12 +2,12 @@ var extend = require("extend")
 var japanese = require("japanese")
 var JsDiff = require("diff")
 
-var updateMap = function(map, value, currentBuffer){
-  if(!currentBuffer){
 var isHiragana = function(str){
   var m = str.match(japanese.hiraganaRegex)
   return (m && m.length === str.length) ? true : false
 }
+var updateMap = function(map, value, currentBuffer){
+  if(!currentBuffer){
     return map
   }
   if(isHiragana(value)){
