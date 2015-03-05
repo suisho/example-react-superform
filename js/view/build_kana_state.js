@@ -22,12 +22,16 @@ var debug = function(args){
 var build = function(prevValue, value, buffer, kana){
   var nextState = {}
   var baseBuffer = buffer
+  // diffの追加/削除状態を簡易化
   var diffState = operateDiff(JsDiff.diffChars(prevValue, value))
   var isRemove = diffState.removed && !diffState.added
+
   var active = getActive(value)
   var prevActive = getActive(prevValue)
+
   var activeReg = new RegExp(active + "$")
   var prevActiveReg = new RegExp(prevActive + "$")
+
   debug([kana, buffer, active, prevActive, value, prevValue])
   var isRemoveConfused = (function(){ //判定不可能な状態か検出する
     if(!isRemove){ return false }
@@ -41,6 +45,7 @@ var build = function(prevValue, value, buffer, kana){
     }
     return false
   })()
+
   if(isRemoveConfused){ // isolated
     nextState.kana = kana
     nextState.buffer = baseBuffer
@@ -56,13 +61,15 @@ var build = function(prevValue, value, buffer, kana){
     // buffer: まりお value: [まり夫 => まりお]
     buffer = buffer.replace(activeReg, "")
   }
+  // bufferを正規化
   if(isRemove){
     var removeReg = new RegExp(prevActive + "$")
     buffer = buffer.replace(removeReg, "")
   }
   nextState.buffer = buffer
 
-  if(active.length < prevActive.length && !isRemove){ // swap
+  // 状態を保存
+  if(active.length < prevActive.length && !isRemove){
     nextState.kana = nextState.buffer = kana
     return nextState
   }
