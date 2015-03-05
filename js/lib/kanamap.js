@@ -1,16 +1,19 @@
 var extend = require("extend")
 var japanese = require("japanese")
-var kanautil = require("kanautil")
 var JsDiff = require("diff")
 
 var updateMap = function(map, value, currentBuffer){
   if(!currentBuffer){
+var isHiragana = function(str){
+  var m = str.match(japanese.hiraganaRegex)
+  return (m && m.length === str.length) ? true : false
+}
     return map
   }
-  if(kanautil.isHiragana(value)){
+  if(isHiragana(value)){
     return map
   }
-  if(!kanautil.isHiragana(currentBuffer)){
+  if(!isHiragana(currentBuffer)){
     currentBuffer = map[currentBuffer] || currentBuffer
   }
   var currentKana = map[value]
