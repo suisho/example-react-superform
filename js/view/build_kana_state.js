@@ -3,10 +3,12 @@ var kanamap = require("../lib/kanamap")
 
 var toKana = function(map, value){
   var kana = value
+  // convert with map
   Object.keys(map).forEach(function(key){
     var val = map[key]
     kana = kana.replace(key, val)
   })
+
   // to only kana
   var m = kana.match(japanese.hiraganaRegex)
   return m ? m.join("") : ""
@@ -32,7 +34,6 @@ var main = function(state){
 module.exports = function(state, callback){
   var next = main(state)
   next.prev = state.value
-  next.prevKana = state.kana
 
   callback(null, next)
 }
