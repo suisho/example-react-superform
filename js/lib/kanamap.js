@@ -22,28 +22,26 @@ var updateMap = function(map, key, kana){
   }
   map[kana] = key
   return map
-
 }
-module.exports = function(prev, next, baseMap){
-  baseMap = baseMap || {}
-  var result = extend(true, {}, baseMap)
-  prev = japanese.hiraganize(prev)
-  prev = baseMap[prev] || prev
-  next = japanese.hiraganize(next)
-  if(prev === next){
-    return result
-  }
-  var diff = JsDiff.diffChars(prev, next)
-  var buffer = null
-  diff.reverse().forEach(function(d){
-    if(d.removed){
-      buffer = d.value
-    }
-    if(d.added){
-      result = updateMap(result, buffer, d.value)
-      buffer = null
-    }
-  })
 
-  return result
+module.exports = function(prev, current, baseMap){
+  baseMap = baseMap || {}
+  prev = japanese.hiraganize(prev)
+  current = japanese.hiraganize(current)
+  // 連続で変換されたときのmapから、先んじて戻す。
+  prev = baseMap[prev] || prev
+
+  if(prev === current){
+    return baseMap
+  }
+  var map = extend(true, {}, baseMap)
+  var reversedDiff = JsDiff.diffChars(prev, current).reverse()
+  reversedDiff.reduce(function(prevDiff, currentDiff){
+    if(!prevDiff.removed || !currentDiff.added){
+      return currentDiff
+    }
+    map = updateMap(map, prevDiff.value, currentDiff.value)
+    return currentDiff
+  })
+  return map
 }
