@@ -14,7 +14,7 @@ var toKana = function(map, value){
   return m ? m.join("") : ""
 }
 
-var main = function(state){
+var build = function(state){
   var prev = japanese.hiraganize(state.prev || "")
   var current = japanese.hiraganize(state.value || "")
   var map = state.map || {}
@@ -32,7 +32,7 @@ var main = function(state){
 }
 
 module.exports = function(state, callback){
-  var next = main(state)
+  var next = build(state)
   next.prev = state.value
 
   callback(null, next)
