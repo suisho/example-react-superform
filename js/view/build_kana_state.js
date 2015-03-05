@@ -14,7 +14,11 @@ var getSanitizedActive = function(value){
   var split = kanautil.split(value) || []
   return split.reverse()[1] || ""
 }
+var debug = function(args){
+  //console.log(arguments[0])
+}
 var build = function(prevValue, value, buffer, kana){
+
   var nextState = {}
   var baseBuffer = buffer
   var diff = JsDiff.diffChars(prevValue, value)
@@ -24,18 +28,27 @@ var build = function(prevValue, value, buffer, kana){
   var active = getActive(value)
   var prevActive = getActive(prevValue)
   var activeReg = new RegExp(active + "$")
-  var isConfused = (function(){ //判定不可能な状態か検出する
+  var prevActiveReg = new RegExp(prevActive + "$")
+  debug([kana, buffer, active, prevActive, value, prevValue])
+
+  var isRemoveConfused = (function(){ //判定不可能な状態か検出する
+    if(!isRemoved){ return false }
     // example :(山田はな子 -> 山田はな)
-    if(isRemoved && active.length > prevActive.length){
+    if(active.length > prevActive.length){
+      return true
+    }
+    // already confused
+    if(!activeReg.test(kana) && !prevActiveReg.test(kana)){
       return true
     }
 
-    if(!isRemoved){ return false }
-    if(activeReg.test(buffer)){ return false }
-    if(!activeReg.test(prevActive)){ return false}
-    return true
+    //if(!activeReg.test(buffer) && activeReg.test(prevActive)){
+    //   return true
+    //}
+
+    return false
   })()
-  if(isConfused){ // isolated
+  if(isRemoveConfused){ // isolated
     nextState.kana = kana
     nextState.buffer = baseBuffer
     return nextState
