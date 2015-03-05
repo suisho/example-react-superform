@@ -36,29 +36,12 @@ module.exports = function(prev, next, baseMap){
   var diff = JsDiff.diffChars(prev, next)
   var buffer = null
   diff.reverse().forEach(function(d){
-    if(d.removed){// && kanautil.isHiragana(d.value)){
+    if(d.removed){
       buffer = d.value
     }
-    //
     if(d.added){
       result = updateMap(result, d.value, buffer)
       buffer = null
-      /*
-      if(!currentBuffer){
-        return
-      }
-      if(kanautil.isHiragana(d.value)){
-        return
-      }
-      if(!kanautil.isHiragana(currentBuffer)){
-        currentBuffer = baseMap[currentBuffer] || currentBuffer
-      }
-      var currentKana = result[d.value]
-      if(currentKana && currentKana.length < currentBuffer.length){
-        currentBuffer = currentKana
-      }
-      result[d.value] = currentBuffer
-      */
     }
   })
 
