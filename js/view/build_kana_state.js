@@ -14,25 +14,23 @@ var getSanitizedActive = function(value){
   var split = kanautil.split(value) || []
   return split.reverse()[1] || ""
 }
+
 var debug = function(args){
   //console.log(arguments[0])
 }
-var build = function(prevValue, value, buffer, kana){
 
+var build = function(prevValue, value, buffer, kana){
   var nextState = {}
   var baseBuffer = buffer
-  var diff = JsDiff.diffChars(prevValue, value)
-  //var isConverted = operateDiff.isConvertedDiff(diff)
-  var isRemoved = operateDiff.isRemovedDiff(diff)
-  //var isAdded = operateDiff.isAddedDiff(diff)
+  var diffState = operateDiff(JsDiff.diffChars(prevValue, value))
+  var isRemove = diffState.removed && !diffState.added
   var active = getActive(value)
   var prevActive = getActive(prevValue)
   var activeReg = new RegExp(active + "$")
   var prevActiveReg = new RegExp(prevActive + "$")
   debug([kana, buffer, active, prevActive, value, prevValue])
-
   var isRemoveConfused = (function(){ //判定不可能な状態か検出する
-    if(!isRemoved){ return false }
+    if(!isRemove){ return false }
     // example :(山田はな子 -> 山田はな)
     if(active.length > prevActive.length){
       return true
@@ -41,11 +39,6 @@ var build = function(prevValue, value, buffer, kana){
     if(!activeReg.test(kana) && !prevActiveReg.test(kana)){
       return true
     }
-
-    //if(!activeReg.test(buffer) && activeReg.test(prevActive)){
-    //   return true
-    //}
-
     return false
   })()
   if(isRemoveConfused){ // isolated
@@ -60,16 +53,16 @@ var build = function(prevValue, value, buffer, kana){
     var sanitizeReg = new RegExp(sanitize + "$")
     buffer = buffer.replace(sanitizeReg, "")
 
-    //
+    // buffer: まりお value: [まり夫 => まりお]
     buffer = buffer.replace(activeReg, "")
   }
-  if(isRemoved){
+  if(isRemove){
     var removeReg = new RegExp(prevActive + "$")
     buffer = buffer.replace(removeReg, "")
   }
   nextState.buffer = buffer
 
-  if(active.length < prevActive.length && !isRemoved){ // swap
+  if(active.length < prevActive.length && !isRemove){ // swap
     nextState.kana = nextState.buffer = kana
     return nextState
   }
@@ -80,7 +73,9 @@ var build = function(prevValue, value, buffer, kana){
 var main = function(state){
   var prevValue = japanese.hiraganize(state.prevValue || "")
   var value = japanese.hiraganize(state.value || "")
-
+  if(prevValue === value){
+    return state
+  }
   return build(prevValue, value, state.buffer, state.kana)
 }
 

@@ -130,7 +130,7 @@ describe("kana", function(){
 
     test(
       {buffer: "", kana: "や", value: "やｍ", prevValue: "や"},
-      {buffer: "や", value: "やｍ", kana: "や"}
+      {kana: "や"}
     )
     test(
       {buffer: "や", kana: "や", value: "やま", prevValue: "やｍ", prevKana: "や"},
@@ -180,8 +180,11 @@ describe("kana", function(){
   describe("Confused", function(){
     test(
       {buffer: "やまだたろう", kana: "やまだたろう", value: "やま", prevValue: "やまだ"},
-      {kana: "やまだたろう"},
-      "Confused by Buffer XXX"
+      {kana: "やまだたろう"}
+    )
+    test(
+      {buffer: "やまま", kana: "やまま", value: "やママｍ", prevValue: "やママｍ"},
+      {kana: "やまま"}
     )
   })
 })

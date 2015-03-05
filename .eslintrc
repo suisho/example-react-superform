@@ -30,7 +30,7 @@
     "react/display-name": 1,
     "semi" : [2 , "never"],
     "strict" : false,
-    "key-spacing" : [2, {
+    "key-spacing" : [0, {
       "beforeColon" : true,
       "afterColon" : true,
     }],

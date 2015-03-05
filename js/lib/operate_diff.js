@@ -10,16 +10,6 @@ var hasRemovedDiff = function(diff){
     return d.removed === true
   })
 }
-var isAddedDiff = function(diff){
-  return hasAddedDiff(diff) && !hasRemovedDiff(diff)
-}
-var isRemovedDiff = function(diff){
-  return !hasAddedDiff(diff) && hasRemovedDiff(diff)
-}
-
-var isConvertedDiff = function(diff){
-  return hasAddedDiff(diff) && hasRemovedDiff(diff)
-}
 
 var args = function(oldStrOrDiff, newStr){
   if(newStr === undefined){
@@ -27,13 +17,12 @@ var args = function(oldStrOrDiff, newStr){
   }
   return JsDiff.diffChars(oldStrOrDiff, newStr)
 }
-
-module.exports.isAddedDiff = function(oldStr, newStr){
-  return isAddedDiff(args(oldStr, newStr))
-}
-module.exports.isRemovedDiff = function(oldStr, newStr){
-  return isRemovedDiff(args(oldStr, newStr))
-}
-module.exports.isConvertedDiff = function(oldStr, newStr){
-  return isConvertedDiff(args(oldStr, newStr))
+module.exports = function(oldStr, newStr){
+  var diff = args(oldStr, newStr)
+  return {
+    // only added
+    added     : hasAddedDiff(diff),
+    // only removed
+    removed   : hasRemovedDiff(diff),
+  }
 }
