@@ -49,7 +49,7 @@ var KanaInput = React.createClass({
       if(err){
         return
       }
-      console.log(old, "=>", next)
+      //console.log(old, "=>", next)
       this.setKanaState(next)
     })
     //return next

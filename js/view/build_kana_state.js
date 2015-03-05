@@ -2,6 +2,8 @@ var kanautil = require("kanautil")
 var japanese = require("japanese")
 var operateDiff = require("../lib/operate_diff")
 var JsDiff = require("diff")
+var extend = require("extend")
+var kanamap = require("../lib/kanamap")
 
 var getActive = function(value){
   var lastKana = kanautil.split(value).pop() || ""
@@ -15,80 +17,52 @@ var getSanitizedActive = function(value){
   return split.reverse()[1] || ""
 }
 
-var debug = function(args){
-  //console.log(arguments[0])
+var extendMap = function(map, prev, current){
+  return kanamap(prev, current, map)
 }
 
-var build = function(prevValue, value, buffer, kana){
-  var nextState = {}
-  var baseBuffer = buffer
-  // diffの追加/削除状態を簡易化
-  var diffState = operateDiff(JsDiff.diffChars(prevValue, value))
-  var isRemove = diffState.removed && !diffState.added
+var toKana = function(map, value){
+  var kana = value
+  Object.keys(map).forEach(function(key){
+    var val = map[key]
+    kana = kana.replace(key, val)
+  })
+  // to only kana
+  var m = kana.match(japanese.hiraganaRegex)
+  return m ? m.join("") : ""
+}
 
-  var active = getActive(value)
-  var prevActive = getActive(prevValue)
-
-  var activeReg = new RegExp(active + "$")
-  var prevActiveReg = new RegExp(prevActive + "$")
-
-  debug([kana, buffer, active, prevActive, value, prevValue])
-  var isRemoveConfused = (function(){ //判定不可能な状態か検出する
-    if(!isRemove){ return false }
-    // example :(山田はな子 -> 山田はな)
-    if(active.length > prevActive.length){
-      return true
-    }
-    // already confused
-    if(!activeReg.test(kana) && !prevActiveReg.test(kana)){
-      return true
-    }
-    return false
-  })()
-
-  if(isRemoveConfused){ // isolated
-    nextState.kana = kana
-    nextState.buffer = baseBuffer
-    return nextState
+var sanitize = function(kana){
+  var lastSplit = kanautil.split(kana).pop() || ""
+  if(kanautil.isHiragana(lastSplit)){
+    return kana
   }
-
-  if(prevActive === ""){
-    // fix buffer like : やｍ -> や
-    var sanitize = getSanitizedActive(prevValue)
-    var sanitizeReg = new RegExp(sanitize + "$")
-    buffer = buffer.replace(sanitizeReg, "")
-
-    // buffer: まりお value: [まり夫 => まりお]
-    buffer = buffer.replace(activeReg, "")
-  }
-  // bufferを正規化
-  if(isRemove){
-    var removeReg = new RegExp(prevActive + "$")
-    buffer = buffer.replace(removeReg, "")
-  }
-  nextState.buffer = buffer
-
-  // 状態を保存
-  if(active.length < prevActive.length && !isRemove){
-    nextState.kana = nextState.buffer = kana
-    return nextState
-  }
-  nextState.kana = buffer + active
-  return nextState
+  var reg = new RegExp(lastSplit + "$")
+  return kana.replace(reg, "")
 }
 
 var main = function(state){
-  var prevValue = japanese.hiraganize(state.prevValue || "")
-  var value = japanese.hiraganize(state.value || "")
-  if(prevValue === value){
+  var prev = japanese.hiraganize(state.prev || "")
+  var current = japanese.hiraganize(state.value || "")
+  var map = state.map || {}
+  if(prev === current){
     return state
   }
-  return build(prevValue, value, state.buffer, state.kana)
+  map = extendMap(map, prev, current)
+  var kana = toKana(map, current)
+  kana = sanitize(kana, "")
+
+  var nextState = {
+    kana : kana,
+    map : map,
+  }
+  return nextState
 }
 
 module.exports = function(state, callback){
   var next = main(state)
-  next.prevValue = state.value
+  next.prev = state.value
+  next.prevKana = state.kana
 
   callback(null, next)
 }
