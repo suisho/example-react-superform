@@ -25,12 +25,12 @@ var build = function(prevValue, value, buffer, kana){
   var prevActive = getActive(prevValue)
   var activeReg = new RegExp(active + "$")
   var isConfused = (function(){ //判定不可能な状態か検出する
-    if(!isRemoved){ return false }
-    // 削除しているのにactiveが増えたらおかしい
+    // example :(山田はな子 -> 山田はな)
     if(isRemoved && active.length > prevActive.length){
       return true
     }
 
+    if(!isRemoved){ return false }
     if(activeReg.test(buffer)){ return false }
     if(!activeReg.test(prevActive)){ return false}
     return true
@@ -41,15 +41,15 @@ var build = function(prevValue, value, buffer, kana){
     return nextState
   }
 
-  // fix buffer
   if(prevActive === ""){
+    // fix buffer like : やｍ -> や
     var sanitize = getSanitizedActive(prevValue)
     var sanitizeReg = new RegExp(sanitize + "$")
     buffer = buffer.replace(sanitizeReg, "")
+
+    //
     buffer = buffer.replace(activeReg, "")
   }
-
-
   if(isRemoved){
     var removeReg = new RegExp(prevActive + "$")
     buffer = buffer.replace(removeReg, "")
